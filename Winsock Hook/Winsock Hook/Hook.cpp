@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <stdio.h>
+
 #include "Util\Common.h"
 #include "Util\Hook.h"
 
@@ -12,6 +13,8 @@ bool bLogSend = false;
 SOCKET mySock = 0;
 int (WINAPI* precv)(SOCKET s, char* buffer, int length, int flags) = NULL;
 int (WINAPI* psend)(SOCKET s, const char* buffer, int length, int flags) = NULL;
+DNS_STATUS(WINAPI* pDNSQueryA)(PCSTR pszName, WORD wType, DWORD Options, PVOID pExtra, PDNS_RECORD* ppQueryResults, PVOID* pReserved) = NULL;
+
 
 int WINAPI MyRecv(SOCKET s, char* buffer, int length, int flags)
 {
@@ -78,4 +81,10 @@ int WINAPI MySend(SOCKET s, const char* buffer, int length, int flags)
 	util::Log("\n\n\n\n");
 
 	return psend(s, buffer, length, flags);
+}
+
+DNS_STATUS __stdcall myDNSQueryA(PCSTR pszName, WORD wType, DWORD Options, PVOID pExtra, PDNS_RECORD* ppQueryResults, PVOID* pReserved)
+{
+	std::cout << "IN DNSQueryA" << '\n';
+	return pDNSQueryA(pszName, wType, Options, pExtra, ppQueryResults, pReserved);
 }

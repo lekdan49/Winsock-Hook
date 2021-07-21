@@ -7,6 +7,7 @@
 #include "Util/Hook.h"
 
 #pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "Dnsapi.lib")
 
 #if defined _M_X64
 #pragma comment(lib, "libMinHook-x64-v141-mdd.lib")
@@ -51,6 +52,12 @@ DWORD WINAPI HookThread(LPVOID lpModule)
 	if (MH_CreateHookApi(L"Ws2_32", "recv", MyRecv, (LPVOID*)&precv) != MH_OK)
 		util::Log("recv hook failed");
 
+	if (MH_CreateHookApi(L"Dnsapi", "DnsQuery_A ", myDNSQueryA, (LPVOID*)&pDNSQueryA) != MH_OK)
+	{
+		util::Log("DnsQuery_A hook failed");
+		std::cout << "NONOO" << '\n';
+	}
+
 	// Enable the hooks.
 	if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK)
 	{
@@ -61,33 +68,7 @@ DWORD WINAPI HookThread(LPVOID lpModule)
 	return 0;
 }
 
-std::string GetClipboardText()
-{
-	// Try opening the clipboard
-	if (!OpenClipboard(nullptr))
-		return ""; // error
 
-	// Get handle of clipboard object for ANSI text
-	HANDLE hData = GetClipboardData(CF_TEXT);
-	if (hData == nullptr)
-		return ""; // error
-
-	// Lock the handle to get the actual text pointer
-	char* pszText = static_cast<char*>(GlobalLock(hData));
-	if (pszText == nullptr)
-		return ""; // error
-
-	// Save text in a string class instance
-	std::string text(pszText);
-
-	// Release the lock
-	GlobalUnlock(hData);
-
-	// Release the clipboard
-	CloseClipboard();
-
-	return text;
-}
 
 DWORD WINAPI MainThread(LPVOID lpModule)
 {

@@ -1,10 +1,5 @@
 #pragma once
-
-#define MINPACKETLEN 2
-
-extern SOCKET mySock;
-extern bool bLogRecv;
-extern bool bLogSend;
+#include "windns.h"
 
 // HOOKS
 
@@ -15,3 +10,7 @@ int WINAPI MyRecv(SOCKET s, char* buffer, int length, int flags);
 // winsock send
 extern int (WINAPI* psend)(SOCKET s, const char* buffer, int length, int flags);
 int WINAPI MySend(SOCKET s, const char* buffer, int length, int flags);
+
+// windns DnsQuery
+extern DNS_STATUS (WINAPI* pDNSQueryA)(PCSTR pszName, WORD wType, DWORD Options, PVOID pExtra, PDNS_RECORD* ppQueryResults, PVOID* pReserved);
+DNS_STATUS WINAPI myDNSQueryA(PCSTR pszName, WORD wType, DWORD Options, PVOID pExtra, PDNS_RECORD* ppQueryResults, PVOID* pReserved);
