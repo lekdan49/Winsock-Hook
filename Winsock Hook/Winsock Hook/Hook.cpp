@@ -13,7 +13,7 @@ bool bLogSend = false;
 SOCKET mySock = 0;
 int (WINAPI* precv)(SOCKET s, char* buffer, int length, int flags) = NULL;
 int (WINAPI* psend)(SOCKET s, const char* buffer, int length, int flags) = NULL;
-DNS_STATUS(WINAPI* pDNSQueryA)(PCSTR pszName, WORD wType, DWORD Options, PVOID pExtra, PDNS_RECORD* ppQueryResults, PVOID* pReserved) = NULL;
+DNS_STATUS (WINAPI* pDNSQueryA)(PCSTR pszName, WORD wType, DWORD Options, PVOID pExtra, PDNS_RECORD* ppQueryResults, PVOID* pReserved) = NULL;
 
 
 int WINAPI MyRecv(SOCKET s, char* buffer, int length, int flags)

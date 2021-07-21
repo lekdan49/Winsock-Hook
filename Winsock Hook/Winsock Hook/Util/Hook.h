@@ -13,4 +13,4 @@ int WINAPI MySend(SOCKET s, const char* buffer, int length, int flags);
 
 // windns DnsQuery
 extern DNS_STATUS (WINAPI* pDNSQueryA)(PCSTR pszName, WORD wType, DWORD Options, PVOID pExtra, PDNS_RECORD* ppQueryResults, PVOID* pReserved);
-DNS_STATUS WINAPI myDNSQueryA(PCSTR pszName, WORD wType, DWORD Options, PVOID pExtra, PDNS_RECORD* ppQueryResults, PVOID* pReserved);
+DNS_STATUS __stdcall myDNSQueryA(PCSTR pszName, WORD wType, DWORD Options, PVOID pExtra, PDNS_RECORD* ppQueryResults, PVOID* pReserved);

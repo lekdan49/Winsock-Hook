@@ -1,10 +1,10 @@
 #include <string>
 #include <windows.h>
 #include <iostream>
-#include "MinHook/MinHook.h"
+#include "MinHook\MinHook.h"
 #include "Util\Common.h"
 #include "Util\Packet.h"
-#include "Util/Hook.h"
+#include "Util\Hook.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "Dnsapi.lib")
@@ -39,7 +39,7 @@ int DisableHooks() {
 
 DWORD WINAPI HookThread(LPVOID lpModule)
 {
-	util::CreateConsole();
+	//util::CreateConsole();
 	// Initialize MinHook.
 	if (MH_Initialize() != MH_OK)
 		util::Log("MH_Initialize failed");
@@ -52,10 +52,11 @@ DWORD WINAPI HookThread(LPVOID lpModule)
 	if (MH_CreateHookApi(L"Ws2_32", "recv", MyRecv, (LPVOID*)&precv) != MH_OK)
 		util::Log("recv hook failed");
 
-	if (MH_CreateHookApi(L"Dnsapi", "DnsQuery_A ", myDNSQueryA, (LPVOID*)&pDNSQueryA) != MH_OK)
+	MH_STATUS err = MH_CreateHookApi(L"Dnsapi", "DnsQuery_A", myDNSQueryA, (LPVOID*)&pDNSQueryA);
+	if (err != MH_OK)
 	{
-		util::Log("DnsQuery_A hook failed");
-		std::cout << "NONOO" << '\n';
+		std::cout << "DNsQuery Failed to hook" << '\n';
+		std::cout << MH_StatusToString(err) << '\n';
 	}
 
 	// Enable the hooks.
