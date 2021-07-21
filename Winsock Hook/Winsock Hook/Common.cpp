@@ -2,11 +2,15 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <io.h>
+#include <iostream>
 #include <string>
 #include <fstream>
 #include <commdlg.h>
+#include <vector>
 
 #include "Util\Common.h"
+
+#define LOGFILE "C:\\Users\\Dan\\Desktop\\log.txt"
 
 void util::CreateConsole()
 {
@@ -15,7 +19,6 @@ void util::CreateConsole()
 		char buffer[1024] = { 0 };
 		sprintf_s(buffer, "Failed to AllocConsole( ), GetLastError( ) = %d", GetLastError());
 		MessageBox(HWND_DESKTOP, buffer, "Error", MB_OK);
-
 		return;
 	}
 
@@ -40,6 +43,20 @@ HMODULE util::GetCurrentModule()
 	return hModule;
 }
 
+void util::Log_buffer(const char* fmt, const std::vector<uint8_t>& msg)
+{
+	std::ofstream logfile(LOGFILE, std::ios::app);
+	if (logfile.is_open()) {
+		logfile << fmt;
+		for (const auto& b : msg)
+		{
+			logfile << std::hex << (int)b;
+		}
+	}
+	logfile.close();
+}
+
+
 void util::Log(const char *fmt, ...)
 {
 	if (!fmt)	return;
@@ -50,7 +67,7 @@ void util::Log(const char *fmt, ...)
 	vsprintf_s(text, fmt, ap);
 	va_end(ap);
 
-	std::ofstream logfile("C:\\Users\\Pawel\\Desktop\\log.txt", std::ios::app);
+	std::ofstream logfile(LOGFILE, std::ios::app);
 	if (logfile.is_open() && text) {
 		logfile << text;
 	}

@@ -3,53 +3,79 @@
 #include "Util\Common.h"
 #include "Util\Hook.h"
 
+#include <vector>
+#include <iostream>
+
 bool bLogRecv = false;
 bool bLogSend = false;
 
 SOCKET mySock = 0;
-int (WINAPI *precv)(SOCKET socket, char* buffer, int length, int flags) = NULL;
-int (WINAPI *psend)(SOCKET socket, const char* buffer, int length, int flags) = NULL;
+int (WINAPI *precv)(SOCKET s, char* buffer, int length, int flags) = NULL;
+int (WINAPI *psend)(SOCKET s, const char* buffer, int length, int flags) = NULL;
 
-int WINAPI MyRecv(SOCKET socket, char* buffer, int length, int flags)
+int WINAPI MyRecv(SOCKET s, char* buffer, int length, int flags)
 {
-	if (mySock == 0) {
-		util::Log("[SOCKET - %d]", socket);
-		mySock = socket;
-	}
+	std::cout << "RECEIVING PACKET" << '\n';
+	util::Log("%s\n", "RECEIVING PACKET");
+	util::Log("LENGTH: %d\n", length);
 
-	if (bLogRecv && length > MINPACKETLEN) {
-		printf("[Recv-%d:%d] ", length, flags);
-		util::Log("[Recv-%d:%d] ", length, flags);
-		for (int i = 0; i < length; i++)
+	sockaddr_in socket;
+	int sock_size = sizeof(socket);
+
+	if (getpeername(s, (struct sockaddr*)&socket, &sock_size) == SOCKET_ERROR)
+	{
+		if (WSAGetLastError() == WSAEFAULT)
 		{
-			printf("%02X ", (unsigned char)buffer[i]);
-			util::Log("%02X ", (unsigned char)buffer[i]);
 		}
-		printf("\n");
-		util::Log("\n");
+	}
+	else
+	{
+		util::Log("SOCKET PEER: %s\n", inet_ntoa(socket.sin_addr));
+		util::Log("SCOKET PORT: %d\n", socket.sin_port);
+	}
+	
+	std::vector<uint8_t> msg;
+	for (int i = 0; i < length; i++)
+	{
+		msg.push_back((uint8_t)buffer[i]);
 	}
 
-	return precv(socket, buffer, length, flags);
+	util::Log_buffer("BUFFER:\n", msg);
+	util::Log("\n\n\n\n");
+
+	return precv(s, buffer, length, flags);
 }
 
-int WINAPI MySend(SOCKET socket, const char* buffer, int length, int flags)
+int WINAPI MySend(SOCKET s, const char* buffer, int length, int flags)
 {
-	if (mySock == 0) {
-		util::Log("[SOCKET - %d]\n", socket);
-		mySock = socket;
+	std::cout << "SENDING PACKET" << '\n';
+	util::Log("%s\n", "SENDING PACKET");
+	util::Log("LENGTH: %d\n", length);
+
+	sockaddr_in socket;
+	int sock_size = sizeof(socket);
+
+	if (getpeername(s, (struct sockaddr*)&socket, &sock_size) == SOCKET_ERROR)
+	{
+		if (WSAGetLastError() == WSAEFAULT)
+		{
+		}
+	}
+	else
+	{
+		util::Log("SOCKET PEER: %s\n", inet_ntoa(socket.sin_addr));
+		util::Log("SCOKET PORT: %d\n", socket.sin_port);
 	}
 
-	if (bLogSend && length > MINPACKETLEN)
+	std::vector<uint8_t> msg;
+	for (int i = 0; i < length; i++)
 	{
-		printf("[Send-%d:%d] ", length, flags);
-		util::Log("[Send-%d:%d] ", length, flags);
-		for (int i = 0; i < length; i++)
-		{
-			printf("%02X ", (unsigned char)buffer[i]);
-			util::Log("%02X ", (unsigned char)buffer[i]);
-		}
-		printf("\n");
-		util::Log("\n");
+		msg.push_back((uint8_t)buffer[i]);
 	}
-	return psend(socket, buffer, length, flags);
+
+	util::Log_buffer("BUFFER:\n", msg);
+
+	util::Log("\n\n\n\n");
+	
+	return psend(s, buffer, length, flags);
 }

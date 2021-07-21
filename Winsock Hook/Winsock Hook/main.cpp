@@ -1,10 +1,10 @@
 #include <string>
 #include <windows.h>
 #include <iostream>
-#include "MinHook\MinHook.h"
+#include "MinHook/MinHook.h"
 #include "Util\Common.h"
 #include "Util\Packet.h"
-#include "Util\Hook.h"
+#include "Util/Hook.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 
