@@ -85,6 +85,6 @@ int WINAPI MySend(SOCKET s, const char* buffer, int length, int flags)
 
 DNS_STATUS __stdcall myDNSQueryA(PCSTR pszName, WORD wType, DWORD Options, PVOID pExtra, PDNS_RECORD* ppQueryResults, PVOID* pReserved)
 {
-	std::cout << "IN DNSQueryA" << '\n';
+	std::cout << pszName << '\n';
 	return pDNSQueryA(pszName, wType, Options, pExtra, ppQueryResults, pReserved);
 }

@@ -12,6 +12,7 @@
 
 #define LOGFILE "C:\\Users\\Dan\\Desktop\\log.txt"
 
+
 void util::CreateConsole()
 {
 	if (!AllocConsole())

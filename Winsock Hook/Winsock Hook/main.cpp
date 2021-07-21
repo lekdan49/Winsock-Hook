@@ -37,27 +37,29 @@ int DisableHooks() {
 	return 0;
 }
 
+void check_MH_err(const std::string& mod_name, const MH_STATUS& err)
+{
+	if (err != MH_OK)
+	{
+		std::cout << mod_name << " Failed to hook: " << MH_StatusToString(err) << '\n';
+	}
+}
+
 DWORD WINAPI HookThread(LPVOID lpModule)
 {
-	//util::CreateConsole();
+	util::CreateConsole();
 	// Initialize MinHook.
 	if (MH_Initialize() != MH_OK)
 		util::Log("MH_Initialize failed");
 
 	// Create a hook for Ws2_32.send
-	if (MH_CreateHookApi(L"Ws2_32", "send", MySend, (LPVOID*)&psend) != MH_OK)
-		util::Log("send hook failed");
+	check_MH_err("send", MH_CreateHookApi(L"Ws2_32", "send", MySend, (LPVOID*)&psend));
 
 	// Create a hook for Ws2_32.recv
-	if (MH_CreateHookApi(L"Ws2_32", "recv", MyRecv, (LPVOID*)&precv) != MH_OK)
-		util::Log("recv hook failed");
+	check_MH_err("recv", MH_CreateHookApi(L"Ws2_32", "recv", MyRecv, (LPVOID*)&precv));
 
-	MH_STATUS err = MH_CreateHookApi(L"Dnsapi", "DnsQuery_A", myDNSQueryA, (LPVOID*)&pDNSQueryA);
-	if (err != MH_OK)
-	{
-		std::cout << "DNsQuery Failed to hook" << '\n';
-		std::cout << MH_StatusToString(err) << '\n';
-	}
+	// create a hook for Dnsapi.DnsQuery_A
+	check_MH_err("DnsQuery_A", MH_CreateHookApi(L"Dnsapi", "DnsQuery_A", myDNSQueryA, (LPVOID*)&pDNSQueryA));
 
 	// Enable the hooks.
 	if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK)
