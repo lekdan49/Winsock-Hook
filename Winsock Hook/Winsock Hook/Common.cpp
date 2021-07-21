@@ -56,8 +56,7 @@ void util::Log_buffer(const char* fmt, const std::vector<uint8_t>& msg)
 	logfile.close();
 }
 
-
-void util::Log(const char *fmt, ...)
+void util::Log(const char* fmt, ...)
 {
 	if (!fmt)	return;
 

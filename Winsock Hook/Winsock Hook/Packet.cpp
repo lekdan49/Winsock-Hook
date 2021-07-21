@@ -42,9 +42,9 @@ void Packet::AddByte(BYTE value) {
 
 void Packet::AddInt32LE(int32_t value) {
 	m_Packet[m_CurrentPos] = (value >> 24) & 0xFF;
-	m_Packet[m_CurrentPos+1] = (value >> 16) & 0xFF;
-	m_Packet[m_CurrentPos+2] = (value >> 8) & 0xFF;
-	m_Packet[m_CurrentPos+3] = value & 0xFF;
+	m_Packet[m_CurrentPos + 1] = (value >> 16) & 0xFF;
+	m_Packet[m_CurrentPos + 2] = (value >> 8) & 0xFF;
+	m_Packet[m_CurrentPos + 3] = value & 0xFF;
 
 	m_CurrentPos += 4;
 	m_PacketSize += 4;
@@ -64,7 +64,7 @@ void Packet::AddString(std::string value) {
 	}
 }
 
-void Packet::AddCharArray(char *value) {
+void Packet::AddCharArray(char* value) {
 	for (char* it = value; *it; ++it) {
 		AddByte(*it);
 	}

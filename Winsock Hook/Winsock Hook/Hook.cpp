@@ -10,8 +10,8 @@ bool bLogRecv = false;
 bool bLogSend = false;
 
 SOCKET mySock = 0;
-int (WINAPI *precv)(SOCKET s, char* buffer, int length, int flags) = NULL;
-int (WINAPI *psend)(SOCKET s, const char* buffer, int length, int flags) = NULL;
+int (WINAPI* precv)(SOCKET s, char* buffer, int length, int flags) = NULL;
+int (WINAPI* psend)(SOCKET s, const char* buffer, int length, int flags) = NULL;
 
 int WINAPI MyRecv(SOCKET s, char* buffer, int length, int flags)
 {
@@ -33,7 +33,7 @@ int WINAPI MyRecv(SOCKET s, char* buffer, int length, int flags)
 		util::Log("SOCKET PEER: %s\n", inet_ntoa(socket.sin_addr));
 		util::Log("SCOKET PORT: %d\n", socket.sin_port);
 	}
-	
+
 	std::vector<uint8_t> msg;
 	for (int i = 0; i < length; i++)
 	{
@@ -76,6 +76,6 @@ int WINAPI MySend(SOCKET s, const char* buffer, int length, int flags)
 	util::Log_buffer("BUFFER:\n", msg);
 
 	util::Log("\n\n\n\n");
-	
+
 	return psend(s, buffer, length, flags);
 }

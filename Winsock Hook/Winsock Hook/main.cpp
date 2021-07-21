@@ -36,7 +36,6 @@ int DisableHooks() {
 	return 0;
 }
 
-
 DWORD WINAPI HookThread(LPVOID lpModule)
 {
 	util::CreateConsole();
@@ -45,11 +44,11 @@ DWORD WINAPI HookThread(LPVOID lpModule)
 		util::Log("MH_Initialize failed");
 
 	// Create a hook for Ws2_32.send
-	if (MH_CreateHookApi(L"Ws2_32", "send", MySend, (LPVOID *)&psend) != MH_OK)
+	if (MH_CreateHookApi(L"Ws2_32", "send", MySend, (LPVOID*)&psend) != MH_OK)
 		util::Log("send hook failed");
 
 	// Create a hook for Ws2_32.recv
-	if (MH_CreateHookApi(L"Ws2_32", "recv", MyRecv, (LPVOID *)&precv) != MH_OK)
+	if (MH_CreateHookApi(L"Ws2_32", "recv", MyRecv, (LPVOID*)&precv) != MH_OK)
 		util::Log("recv hook failed");
 
 	// Enable the hooks.
@@ -74,7 +73,7 @@ std::string GetClipboardText()
 		return ""; // error
 
 	// Lock the handle to get the actual text pointer
-	char * pszText = static_cast<char*>(GlobalLock(hData));
+	char* pszText = static_cast<char*>(GlobalLock(hData));
 	if (pszText == nullptr)
 		return ""; // error
 
@@ -90,15 +89,10 @@ std::string GetClipboardText()
 	return text;
 }
 
-
 DWORD WINAPI MainThread(LPVOID lpModule)
 {
-
-
-
 	return 0;
 }
-
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD_PTR ul_reason_for_call, LPVOID lpReserved)
 {
