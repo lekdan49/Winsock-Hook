@@ -90,54 +90,11 @@ std::string GetClipboardText()
 	return text;
 }
 
-int SendFromClipboard() {
-	std::string data = GetClipboardText();
-	std::string prefix = "0x";
-
-	if (data.length() < 1)
-	{
-		return 1;
-	}
-
-	Packet* p = new Packet();
-
-	for (unsigned int i = 0; i < data.size(); i += 3) {
-		p->AddByte(std::stoi(prefix + data[i] + data[i + 1], nullptr, 0));
-	}
-
-	p->UpdatePacketSize();
-	MySend(mySock, (char*)p->GetRawPacket(), p->GetRawSize(), 0);
-	delete p;
-
-	return 0;
-}
 
 DWORD WINAPI MainThread(LPVOID lpModule)
 {
 
-	while (1)
-	{
-		if (GetAsyncKeyState(VK_F1) & 1) {
-			bLogSend = !bLogSend;
-			printf("[bLogSend - %s]\n", bLogSend ? "true" : "false");
-		}
-		if (GetAsyncKeyState(VK_F2) & 1) {
-			bLogRecv = !bLogRecv;
-			printf("[bLogRecv - %s]\n", bLogRecv ? "true" : "false");
-		}
 
-		/*
-		if (GetAsyncKeyState(VK_F8) & 1) {
-			SendFromClipboard();
-		}
-
-		if (GetAsyncKeyState(VK_F10) & 1) {
-			EjectDLL(reinterpret_cast<HMODULE>(lpModule));
-		}
-		*/
-
-		Sleep(10);
-	}
 
 	return 0;
 }
